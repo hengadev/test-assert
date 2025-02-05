@@ -21,9 +21,9 @@ type FieldStructComparer interface {
 // Returns:
 //   - bool: true if all specified fields are equal, false otherwise.
 //   - error: An error if an issue occurs during the comparison. Returns nil if the comparison is successful.
-func FieldsEqual[T FieldStructComparer](t testing.TB, a, b *T, fields []string) (bool, error) {
+func FieldsEqual[T FieldStructComparer](t testing.TB, got, want *T, fields []string) (bool, error) {
 	t.Helper()
-	if a == nil || b == nil {
+	if got == nil || want == nil {
 		return false, fmt.Errorf("cannot compare nil values")
 	}
 
@@ -32,31 +32,31 @@ func FieldsEqual[T FieldStructComparer](t testing.TB, a, b *T, fields []string) 
 	// 	return false, fmt.Errorf("one or both instances are invalid")
 	// }
 
-	valA := reflect.ValueOf(*a)
-	valB := reflect.ValueOf(*b)
+	gotVal := reflect.ValueOf(*got)
+	wantVal := reflect.ValueOf(*want)
 
 	// Ensure we're working with struct types
-	if valA.Kind() != reflect.Struct || valB.Kind() != reflect.Struct {
+	if gotVal.Kind() != reflect.Struct || wantVal.Kind() != reflect.Struct {
 		return false, fmt.Errorf("both arguments must be structs")
 	}
 
 	// Compare each specified field
 	for _, fieldName := range fields {
-		fieldA := valA.FieldByName(fieldName)
-		fieldB := valB.FieldByName(fieldName)
+		gotField := gotVal.FieldByName(fieldName)
+		wantField := wantVal.FieldByName(fieldName)
 
 		// Check if the field exists
-		if !fieldA.IsValid() || !fieldB.IsValid() {
+		if !gotField.IsValid() || !wantField.IsValid() {
 			return false, fmt.Errorf("field %s does not exist", fieldName)
 		}
 
 		// Check if the fields are comparable
-		if !fieldA.Type().Comparable() {
+		if !gotField.Type().Comparable() {
 			return false, fmt.Errorf("field %s is not comparable", fieldName)
 		}
 
 		// Compare the field values
-		if !reflect.DeepEqual(fieldA.Interface(), fieldB.Interface()) {
+		if !reflect.DeepEqual(gotField.Interface(), wantField.Interface()) {
 			return false, nil
 		}
 	}
