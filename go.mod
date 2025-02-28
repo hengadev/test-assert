@@ -1,3 +1,3 @@
-module github.com/GaryHY/test-assert
+module github.com/hengadev/test-assert
 
 go 1.22.1

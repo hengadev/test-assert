@@ -20,7 +20,7 @@ A Go package providing a set of helper functions to simplify common testing scen
 You can install this package by running the following command:
 
 ```bash
-go get github.com/yourusername/testhelpers
+go get github.com/hengadev/test-assert
 ```
 ## Usage
 
@@ -35,7 +35,7 @@ package yourpackage
 
 import (
 	"testing"
-	"github.com/GaryHY/test-assert"
+	"github.com/hengadev/test-assert"
 )
 
 func TestEqual(t *testing.T) {
